@@ -1,0 +1,8 @@
+{
+  "name": "mathbot-siege-capture",
+  "private": true,
+  "description": "Headless Chrome capture of the store trailer frames, key art and screenshots",
+  "dependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}

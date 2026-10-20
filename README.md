@@ -87,4 +87,20 @@ The game opens on http://localhost:5199 using `src/dev-props.json`.
 - Build the production bundle with `npm run build`.
 - To regenerate the README screenshots, open `/?shot=title|lesson|shop|play|hit|sniper|boss` (or `/phone-frame.html?shot=play` for the phone view) in headless Chrome. `src/dev-shots.ts` drives the game to each scene.
 
+## Store media
+
+The EdVerse listing media lives in `docs/store/`: an 800×800 and a 1280×720 key art, plus 8 screenshots. There is also a 44 s gameplay trailer, which is not committed because of its size. Everything is captured from the real game, with no paint-overs.
+
+- `/?shot=video` runs `src/dev-director.ts`, a scripted, frame-stepped playthrough: title, lesson, armory, two waves, then a sniper finale on a Titan. A bot player aims at the answer screens and misses once on purpose to show the feedback.
+- `/?shot=keyart` shows the title lineup without its buttons.
+
+```bash
+cd tools/capture && npm install
+GPU=1 node capture.mjs video frames
+node capture.mjs shot:keyart out 1280 720
+ffmpeg -framerate 30 -i frames/%05d.jpg -c:v libx264 -pix_fmt yuv420p -crf 20 trailer.mp4
+```
+
+The dev server must be running on port 5199. Set `CHROME` if Chrome is not at its default Windows path.
+
 On EdVerse, `src/App.tsx`, `src/index.tsx` and `webpack.config.js` come from the platform scaffold. Only the other `src/` files are pushed there.

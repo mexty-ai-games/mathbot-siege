@@ -1,3 +1,4 @@
+import { director, keyart } from './dev-director';
 // Dev only (not part of the EdVerse block): ?shot=<scene> drives the game to a scene so a headless browser
 // can screenshot it for the README. Scenes: title, lesson, shop, play, hit, sniper, boss, mobile.
 const params = typeof location !== 'undefined' ? new URLSearchParams(location.search) : null;
@@ -116,6 +117,8 @@ function finish() {
 
 export function setupShots() {
   if (!shot) return;
+  if (shot === 'video') { director(); return; }
+  if (shot === 'keyart') { keyart(); return; }
   if (touch) {
     const mm = window.matchMedia.bind(window);
     (window as any).matchMedia = (q: string) => (q === '(pointer: coarse)' ? ({ matches: true } as MediaQueryList) : mm(q));
