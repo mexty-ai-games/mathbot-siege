@@ -87,7 +87,64 @@ export async function director() {
     return list[0] || null;
   };
 
+  // the bot keeps moving: it walks between waypoints while it looks for robots and strafes while it aims
+  const roam = { wp: null as any, check: 0, from: null as any, strafe: 1, flipT: 1.8, sPos: null as any };
+  const pickWaypoint = () => {
+    // look around and head for the most open direction (mild bias to keep going forward),
+    // stopping well short of whatever is at the end so the camera never ends up nose-to-wall
+    const b = e.w.meta.bounds;
+    const inside = (p: any) => p.x > b.minX + 2 && p.x < b.maxX - 2 && p.z > b.minZ + 2 && p.z < b.maxZ - 2;
+    let best: any = null;
+    let bestScore = -1;
+    for (let i = 0; i < 24; i++) {
+      const a = e.yaw + (i / 24 - 0.5) * Math.PI * 2 * 0.9 + (Math.random() - 0.5) * 0.2;
+      let open = 0;
+      for (let d = 3; d <= 24; d += 3) {
+        const p = new V(e.pos.x - Math.sin(a) * d, e.pos.y, e.pos.z - Math.cos(a) * d);
+        if (!inside(p) || !e.w.clearLine(e.pos, p)) break;
+        open = d;
+      }
+      let da = a - e.yaw;
+      while (da > Math.PI) da -= Math.PI * 2;
+      while (da < -Math.PI) da += Math.PI * 2;
+      const score = open * (1.2 - Math.abs(da) / Math.PI * 0.7) + Math.random() * 2;
+      if (open >= 9 && score > bestScore) {
+        bestScore = score;
+        const d = open * 0.55;
+        best = new V(e.pos.x - Math.sin(a) * d, e.pos.y, e.pos.z - Math.cos(a) * d);
+      }
+    }
+    return best || new V((b.minX + b.maxX) / 2, e.pos.y, (b.minZ + b.maxZ) / 2);
+  };
+  const walk = (dt: number) => {
+    if (!roam.wp) { roam.wp = pickWaypoint(); roam.check = 0; roam.from = e.pos.clone(); }
+    const dx = roam.wp.x - e.pos.x;
+    const dz = roam.wp.z - e.pos.z;
+    roam.check += dt;
+    // arrived, or stuck against cover for a second: pick the next spot
+    if (dx * dx + dz * dz < 2.2 || (roam.check > 1 && roam.from.distanceTo(e.pos) < 0.6)) { roam.wp = null; return; }
+    if (roam.check > 1) { roam.check = 0; roam.from.copy(e.pos); }
+    let dy = Math.atan2(-dx, -dz) - e.yaw;
+    while (dy > Math.PI) dy -= Math.PI * 2;
+    while (dy < -Math.PI) dy += Math.PI * 2;
+    e.yaw += dy * Math.min(1, dt * 2.2);
+    e.pitch += (-0.03 - e.pitch) * Math.min(1, dt * 2);
+    // only walk once roughly facing the way, so the view doesn't slide sideways
+    e.setMove(0, Math.abs(dy) < 0.6 ? 0.85 : 0.25);
+  };
+  const strafe = (dt: number) => {
+    // the finale is a still, scoped sniper shot
+    if (bot.focus) return;
+    roam.flipT -= dt;
+    // blocked by cover: step the other way
+    if (roam.sPos && roam.sPos.distanceTo(e.pos) < dt * 0.4) roam.flipT = 0;
+    roam.sPos = e.pos.clone();
+    if (roam.flipT <= 0) { roam.strafe = -roam.strafe; roam.flipT = 1.4 + Math.random() * 1.2; }
+    e.setMove(roam.strafe * 0.45, 0);
+  };
+
   const drive = (dt: number) => {
+    e.setMove(0, 0);
     // click through the lesson and the armory between waves (buy the rifle on the way)
     if (e.phase === 'intermission' && t > 9) {
       interT += dt;
@@ -112,18 +169,23 @@ export async function director() {
     if (bot.focus && !bot.focus.isAlive() && !doneAt) { doneAt = t; e.zoomWanted = false; }
     if (zoomAt && t > zoomAt) { e.zoomWanted = true; zoomAt = 0; }
     e.shield = Math.max(e.shield, 5);
-    if (bot.wait > 0) { bot.wait -= dt; return; }
+    if (bot.wait > 0) {
+      bot.wait -= dt;
+      if (bot.target) strafe(dt); else walk(dt);
+      return;
+    }
     if (!bot.target || !bot.target.isAlive() || !bot.target.problem) {
       bot.target = chooseTarget();
       if (!bot.target) {
-        // turn slowly toward the hall while waiting for robots
-        e.yaw += (0 - e.yaw) * Math.min(1, dt * 1.5);
+        walk(dt);
         return;
       }
+      roam.wp = null;
       // the second shot of the run is a deliberate miss, to show the kind feedback
       bot.panel = bot.shots === 1 ? (bot.target.correctIndex + 1) % bot.target.panels.length : bot.target.correctIndex;
     }
     const r = bot.target;
+    strafe(dt);
     if (bot.panel !== r.correctIndex && bot.shots !== 1) bot.panel = r.correctIndex;
     const p = r.panels[bot.panel].getWorldPosition(new V());
     const d = p.sub(e.pos);
