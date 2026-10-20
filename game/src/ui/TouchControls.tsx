@@ -2,13 +2,17 @@ import React, { useRef } from 'react';
 
 interface Props {
   fireLabel: string;
+  zoomLabel: string;
+  canZoom: boolean;
+  zoomed: boolean;
   onMove: (x: number, y: number) => void;
   onLook: (dx: number, dy: number) => void;
   onTapFire: (x: number, y: number) => void;
-  onFire: () => void;
+  onFire: (down: boolean) => void;
+  onZoom: () => void;
 }
 
-/** Left: move stick. Right: drag to look, quick tap to shoot where you tap. Fire button shoots at the crosshair. */
+/** Left: move stick. Right: drag to look, quick tap to shoot where you tap. FIRE (hold for automatic) and ZOOM buttons. */
 export function TouchControls(p: Props) {
   const stick = useRef<HTMLDivElement>(null);
   const knob = useRef<HTMLElement>(null);
@@ -74,7 +78,16 @@ export function TouchControls(p: Props) {
       >
         <i ref={knob} />
       </div>
-      <button className="msb-fire" onPointerDown={(e) => { e.preventDefault(); p.onFire(); }} aria-label={p.fireLabel}>{p.fireLabel}</button>
+      <button
+        className="msb-fire"
+        onPointerDown={(e) => { e.preventDefault(); (e.target as HTMLElement).setPointerCapture(e.pointerId); p.onFire(true); }}
+        onPointerUp={() => p.onFire(false)}
+        onPointerCancel={() => p.onFire(false)}
+        aria-label={p.fireLabel}
+      >{p.fireLabel}</button>
+      {p.canZoom && (
+        <button className={'msb-zoombtn' + (p.zoomed ? ' on' : '')} onClick={p.onZoom} aria-pressed={p.zoomed} aria-label={p.zoomLabel}>⌖</button>
+      )}
     </>
   );
 }

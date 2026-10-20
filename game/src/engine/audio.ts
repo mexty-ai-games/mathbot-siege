@@ -84,10 +84,26 @@ export class Sfx {
     src.start(t);
   }
 
-  shoot() {
-    this.tone(1400, 0.12, 'square', 0.12, 220);
-    this.tone(700, 0.09, 'sawtooth', 0.08, 120);
-    this.noise(0.08, 0.25, 2600, 0.8);
+  shoot(weapon = 'pistol') {
+    if (weapon === 'rifle') {
+      this.tone(1700, 0.07, 'square', 0.08, 400);
+      this.noise(0.05, 0.18, 3200, 1);
+    } else if (weapon === 'shotgun') {
+      this.noise(0.28, 0.5, 900, 0.6, 0, 'lowpass');
+      this.tone(160, 0.25, 'sawtooth', 0.22, 50);
+      this.tone(900, 0.1, 'square', 0.06, 200);
+    } else if (weapon === 'sniper') {
+      this.tone(2400, 0.2, 'sawtooth', 0.1, 120);
+      this.noise(0.35, 0.35, 1400, 0.8);
+      this.tone(90, 0.4, 'sine', 0.3, 40);
+    } else {
+      this.tone(1400, 0.12, 'square', 0.12, 220);
+      this.tone(700, 0.09, 'sawtooth', 0.08, 120);
+      this.noise(0.08, 0.25, 2600, 0.8);
+    }
+  }
+  pickup(shield = false) {
+    this.tone(shield ? 660 : 1320, 0.07, 'triangle', 0.12, shield ? 990 : 1760);
   }
   correct() {
     this.tone(660, 0.1, 'triangle', 0.25);

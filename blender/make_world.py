@@ -7,10 +7,9 @@ import numpy as np
 from mathutils import Vector
 from lib import *
 
-args = sys.argv[sys.argv.index('--') + 1:]
+args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else ['out']
 OUT = os.path.abspath(args[0])
 PREVIEW = 'preview' in args
-os.makedirs(OUT, exist_ok=True)
 rng = np.random.default_rng(7)
 random.seed(7)
 
@@ -248,5 +247,7 @@ def arena():
         bpy.ops.render.render(write_still=True)
 
 
-blaster()
-arena()
+if __name__ == '__main__':
+    os.makedirs(OUT, exist_ok=True)
+    blaster()
+    arena()

@@ -16,12 +16,21 @@ export interface KindSpec {
   height: number;
   tier: number;         // number difficulty bonus
   points: number;
+  hover?: number;       // flying height added to the root (scouts)
+  proxyY?: number;      // body centre for hit tests (before scale)
+}
+
+export interface Nav {
+  steer: (p: THREE.Vector3, dir: THREE.Vector3, r: number) => THREE.Vector3;
+  resolve: (p: THREE.Vector3, r: number) => void;
 }
 
 export const KINDS: { [k: string]: KindSpec } = {
-  drone: { speed: 1.0, problems: 1, armor: 0x0f8f86, glow: 0x30fff0, scale: 1.3, boardY: 2.45, radius: 0.42, height: 2.0, tier: 0, points: 100 },
-  mech: { speed: 0.72, problems: 2, armor: 0x9a1016, glow: 0xff2a18, scale: 1.25, boardY: 2.95, radius: 0.6, height: 2.5, tier: 1, points: 150 },
-  spider: { speed: 1.5, problems: 1, armor: 0x8a4a12, glow: 0xffa020, scale: 1.3, boardY: 1.75, radius: 0.9, height: 1.2, tier: 2, points: 150 },
+  drone: { speed: 1.6, problems: 1, armor: 0x0f8f86, glow: 0x30fff0, scale: 1.3, boardY: 2.45, radius: 0.42, height: 2.0, tier: 0, points: 100 },
+  mech: { speed: 1.15, problems: 2, armor: 0x9a1016, glow: 0xff2a18, scale: 1.25, boardY: 2.95, radius: 0.6, height: 2.5, tier: 1, points: 150 },
+  spider: { speed: 2.3, problems: 1, armor: 0x8a4a12, glow: 0xffa020, scale: 1.3, boardY: 1.75, radius: 0.9, height: 1.2, tier: 2, points: 150 },
+  scout: { speed: 2.6, problems: 1, armor: 0x5a22c8, glow: 0xd070ff, scale: 1.25, boardY: 2.35, radius: 0.75, height: 0.9, tier: 1, points: 150, hover: 1.1, proxyY: 1.6 },
+  titan: { speed: 0.85, problems: 4, armor: 0xa8781a, glow: 0xffc030, scale: 1.6, boardY: 2.95, radius: 0.75, height: 2.6, tier: 2, points: 500 },
 };
 
 export type RobotState = 'spawning' | 'walking' | 'attacking' | 'down' | 'gone';
@@ -63,11 +72,19 @@ export class Robot {
   targeted = false;
   /** Title-screen showcase robot: idles in place, never attacks */
   display = false;
+  /** Flying height (scouts) */
+  hover = 0;
+  private stuckT = 0;
+  private detour = 0;
 
   constructor(kind: RobotKind, gltf: GLTF, private scene: THREE.Scene, spawn: THREE.Vector3) {
     this.kind = kind;
     const base = KINDS[kind];
-    this.spec = Object.assign({}, base, { boardY: base.boardY * base.scale, radius: base.radius * base.scale, height: base.height * base.scale });
+    this.spec = Object.assign({}, base, {
+      boardY: base.boardY * base.scale, radius: base.radius * base.scale, height: base.height * base.scale,
+      proxyY: (base.proxyY !== undefined ? base.proxyY : base.height / 2) * base.scale,
+    });
+    this.hover = base.hover || 0;
     this.problemsLeft = this.spec.problems;
     const model = cloneSkinned(gltf.scene);
     model.scale.setScalar(this.spec.scale);
@@ -143,7 +160,7 @@ export class Robot {
     // invisible body proxy for "you hit the armour" sparks
     this.proxy = new THREE.Mesh(new THREE.CylinderGeometry(this.spec.radius, this.spec.radius, this.spec.height, 8),
       new THREE.MeshBasicMaterial({ visible: false }));
-    this.proxy.position.y = this.spec.height / 2;
+    this.proxy.position.y = this.spec.proxyY as number;
     this.proxy.userData.robot = this;
     this.root.add(this.proxy);
 
@@ -234,7 +251,7 @@ export class Robot {
   }
 
   /** Returns 'zap' on the frame an attack lands. */
-  update(dt: number, player: THREE.Vector3, camera: THREE.Camera, others: Robot[]): 'zap' | 'gone' | null {
+  update(dt: number, player: THREE.Vector3, camera: THREE.Camera, others: Robot[], nav?: Nav): 'zap' | 'gone' | null {
     this.t += dt;
     this.stateT += dt;
     this.mixer.update(dt);
@@ -272,7 +289,8 @@ export class Robot {
 
     const toP = new THREE.Vector3(player.x - this.root.position.x, 0, player.z - this.root.position.z);
     const dist = toP.length();
-    if (this.isAlive() && !this.display) {
+    // face the player when close or busy; while walking they face their path
+    if (this.isAlive() && !this.display && (this.state !== 'walking' || dist < 7)) {
       const targetYaw = Math.atan2(toP.x, toP.z);
       let dy = targetYaw - this.root.rotation.y;
       while (dy > Math.PI) dy -= Math.PI * 2;
@@ -284,14 +302,26 @@ export class Robot {
       const k = Math.min(1, this.stateT / 0.7);
       const e = 1 - Math.pow(1 - k, 3);
       this.root.scale.set(e, e, e);
+      this.root.position.y = this.hover * e;
       if (k >= 1) { this.state = 'walking'; this.stateT = 0; }
     } else if (this.state === 'walking' && this.display) {
       this.play('Idle');
     } else if (this.state === 'walking') {
-      const stop = 1.9 + this.spec.radius;
+      const stop = (this.hover ? 2.6 : 1.9) + this.spec.radius;
+      if (this.hover) this.root.position.y = this.hover + Math.sin(this.t * 1.7) * 0.15;
       if (dist > stop) {
         const v = this.spec.speed * this.speedMul;
-        const move = toP.normalize().multiplyScalar(v * dt);
+        let dir = toP.normalize();
+        // ground robots walk around cover; flyers go over it
+        if (nav && !this.hover) {
+          dir = nav.steer(this.root.position, dir, this.spec.radius * 0.8);
+          if (this.detour > 0) {
+            this.detour -= dt;
+            dir = new THREE.Vector3(-dir.z, 0, dir.x).multiplyScalar(this.id % 2 ? 1 : -1).add(dir.clone().multiplyScalar(0.3)).normalize();
+          }
+        }
+        const before = this.root.position.clone();
+        const move = dir.clone().multiplyScalar(v * dt);
         // separation from other robots
         for (let i = 0; i < others.length; i++) {
           const o = others[i];
@@ -303,6 +333,18 @@ export class Robot {
           if (l > 0.001 && l < min) move.add(d.multiplyScalar(((min - l) / l) * dt * 2));
         }
         this.root.position.add(move);
+        if (nav && !this.hover) nav.resolve(this.root.position, this.spec.radius);
+        // stuck against cover: sidestep for a moment
+        if (before.distanceTo(this.root.position) < v * dt * 0.25) {
+          this.stuckT += dt;
+          if (this.stuckT > 0.8) { this.detour = 1.2; this.stuckT = 0; }
+        } else this.stuckT = 0;
+        // face where we walk
+        const fy = Math.atan2(dir.x, dir.z);
+        let dyaw = fy - this.root.rotation.y;
+        while (dyaw > Math.PI) dyaw -= Math.PI * 2;
+        while (dyaw < -Math.PI) dyaw += Math.PI * 2;
+        this.root.rotation.y += dyaw * Math.min(1, dt * 3);
         this.play('Walk');
         if (this.actions.Walk) this.actions.Walk.timeScale = Math.max(0.6, this.speedMul);
       } else {
@@ -327,9 +369,10 @@ export class Robot {
         this.play('Idle');
       }
     } else if (this.state === 'down') {
+      if (this.hover) this.root.position.y = Math.max(0, this.root.position.y - dt * 2.5);
       if (this.stateT > 2.4) {
         const k = Math.min(1, (this.stateT - 2.4) / 0.6);
-        this.root.position.y = -k * 1.2;
+        this.root.position.y = -k * 1.2 * this.spec.scale;
         this.board.visible = false;
         if (k >= 1) {
           this.state = 'gone';
@@ -341,7 +384,7 @@ export class Robot {
   }
 
   center(out: THREE.Vector3): THREE.Vector3 {
-    return out.copy(this.root.position).setY(this.root.position.y + this.spec.height * 0.6);
+    return out.copy(this.root.position).setY(this.root.position.y + (this.spec.proxyY as number) * 1.1);
   }
 
   dispose() {

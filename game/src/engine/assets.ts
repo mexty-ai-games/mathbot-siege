@@ -7,7 +7,9 @@ export interface Assets {
   drone: GLTF;
   mech: GLTF;
   spider: GLTF;
-  blaster: GLTF;
+  scout: GLTF;
+  titan: GLTF;
+  weapons: GLTF;
   arena: GLTF;
 }
 
@@ -31,7 +33,7 @@ function load(loader: GLTFLoader, url: string, onProgress: (f: number) => void):
 export function loadAssets(urls: ModelUrls, onProgress: (f: number) => void): Promise<Assets> {
   const loader = new GLTFLoader();
   loader.setCrossOrigin('anonymous');
-  const keys: (keyof ModelUrls)[] = ['arena', 'drone', 'mech', 'spider', 'blaster'];
+  const keys: (keyof ModelUrls)[] = ['arena', 'drone', 'mech', 'spider', 'scout', 'titan', 'weapons'];
   const prog: number[] = keys.map(() => 0);
   const report = () => onProgress(prog.reduce((a, b) => a + b, 0) / keys.length);
   return Promise.all(keys.map((k, i) => load(loader, urls[k], (f) => { prog[i] = f; report(); }).then((g) => {
@@ -39,7 +41,7 @@ export function loadAssets(urls: ModelUrls, onProgress: (f: number) => void): Pr
     report();
     return g;
   }))).then((res) => ({
-    arena: res[0], drone: res[1], mech: res[2], spider: res[3], blaster: res[4],
+    arena: res[0], drone: res[1], mech: res[2], spider: res[3], scout: res[4], titan: res[5], weapons: res[6],
   }));
 }
 

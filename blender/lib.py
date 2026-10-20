@@ -84,6 +84,29 @@ def box(name, size, loc, m, bevel=0.012, rot=(0, 0, 0)):
     return _finish(o, m, bevel)
 
 
+def profile(name, pts, width, m, x=0.0, bevel=0.006):
+    """Side silhouette `pts` [(y, z), ...] (counter-clockwise, seen from +X) extruded `width` along X, centred on x."""
+    bm = bmesh.new()
+    a = [bm.verts.new((x - width / 2, y, z)) for y, z in pts]
+    b = [bm.verts.new((x + width / 2, y, z)) for y, z in pts]
+    n = len(pts)
+    bm.faces.new(list(reversed(a)))
+    bm.faces.new(b)
+    for i in range(n):
+        j = (i + 1) % n
+        bm.faces.new((a[i], a[j], b[j], b[i]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(name, me)
+    bpy.context.collection.objects.link(o)
+    bpy.ops.object.select_all(action='DESELECT')
+    o.select_set(True)
+    bpy.context.view_layer.objects.active = o
+    return _finish(o, m, bevel)
+
+
 def cyl(name, r, depth, loc, m, rot=(0, 0, 0), verts=16, bevel=0.0, r2=None):
     if r2 is None:
         bpy.ops.mesh.primitive_cylinder_add(vertices=verts, radius=r, depth=depth, location=loc,

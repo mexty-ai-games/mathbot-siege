@@ -279,3 +279,66 @@ def spider(name):
         down['leg_lo.' + n] = [('ry', -sx_ * 50)]
     make_action(arm, 'PowerDown', [(1, {}), (8, {'body': [('rx', -8)], 'root': [('loc', (0, 0, 0.08))]}), (24, down), (36, down)])
     return arm, mesh
+
+
+# ------------------------------------------------------------------ scout (hover drone)
+def scout(name):
+    """Flying drone: hovers (root at the floor, body ~1.6 m up so the game can lift it further)."""
+    M = robot_mats()
+    BZ = 1.6
+    bones = [
+        ('root', (0, 0, 0), (0, 0, 0.2), None),
+        ('body', (0, 0, BZ - 0.2), (0, 0, BZ + 0.2), 'root'),
+        ('eye', (0, -0.25, BZ), (0, -0.45, BZ), 'body'),
+        ('wing.L', (0.3, 0, BZ), (0.75, 0, BZ), 'body'),
+        ('wing.R', (-0.3, 0, BZ), (-0.75, 0, BZ), 'body'),
+        ('tail', (0, 0.25, BZ - 0.1), (0, 0.55, BZ - 0.25), 'body'),
+    ]
+    arm = make_armature(name + '_rig', bones)
+    R = Rig(arm)
+    R.add('body', sphere('core', 0.34, (0, 0, BZ), M['armor'], seg=20, rings=12, scale=(1, 1.1, 0.85)))
+    R.add('body', torus('belt', 0.33, 0.035, (0, 0, BZ), M['frame'], maj=32, mino=8))
+    R.add('body', torus('beltglow', 0.345, 0.012, (0, 0, BZ - 0.04), M['glow'], maj=32, mino=6))
+    R.add('body', cyl('thruster', 0.14, 0.12, (0, 0, BZ - 0.33), M['frame'], verts=16, r2=0.09))
+    R.add('body', cyl('thrusterglow', 0.08, 0.02, (0, 0, BZ - 0.4), M['glow'], verts=16))
+    R.add('body', box('fin', (0.03, 0.22, 0.16), (0, 0.18, BZ + 0.3), M['frame'], bevel=0.01))
+    panel(R, M, 'body', 'face', (0, -0.31 - 0.012, BZ + 0.02), 0.24, 0.16)
+    R.add('eye', sphere('lens', 0.05, (0, -0.33, BZ - 0.17), M['glow'], seg=10, rings=6))
+    for s, L in ((1, 'L'), (-1, 'R')):
+        R.add('wing.' + L, box('wing' + L, (0.42, 0.24, 0.05), (s * 0.52, 0.02, BZ), M['armor'], bevel=0.02, rot=(0, s * -8, 0)))
+        R.add('wing.' + L, cyl('rotor' + L, 0.15, 0.04, (s * 0.72, 0.02, BZ + 0.02), M['frame'], verts=18))
+        R.add('wing.' + L, torus('rotorglow' + L, 0.15, 0.012, (s * 0.72, 0.02, BZ + 0.02), M['glow'], maj=24, mino=6))
+        R.add('wing.' + L, box('pod' + L, (0.2, 0.06, 0.16), (s * 0.5, -0.11, BZ), M['frame'], bevel=0.01))
+        panel(R, M, 'wing.' + L, 'wing' + L, (s * 0.5, -0.14 - 0.012, BZ), 0.17, 0.12)
+    R.add('tail', box('tailboom', (0.06, 0.32, 0.06), (0, 0.4, BZ - 0.17), M['frame'], bevel=0.01, rot=(-25, 0, 0)))
+    R.add('tail', sphere('taillight', 0.035, (0, 0.55, BZ - 0.25), M['glow'], seg=8, rings=5))
+    mesh = R.finish(name)
+    make_action(arm, 'Idle', [
+        (1, {'root': [('loc', (0, 0, 0))], 'wing.L': [('ry', 6)], 'wing.R': [('ry', -6)]}),
+        (20, {'root': [('loc', (0, 0, 0.08))], 'wing.L': [('ry', -6)], 'wing.R': [('ry', 6)], 'body': [('rz', 6)]}),
+        (40, {'root': [('loc', (0, 0, 0))], 'wing.L': [('ry', 6)], 'wing.R': [('ry', -6)]}),
+    ])
+    make_action(arm, 'Walk', [
+        (1, {'body': [('rx', 14)], 'root': [('loc', (0, 0, 0))], 'wing.L': [('ry', 10)], 'wing.R': [('ry', -10)], 'tail': [('rx', -10)]}),
+        (12, {'body': [('rx', 16), ('ry', 6)], 'root': [('loc', (0, 0, 0.1))], 'wing.L': [('ry', -8)], 'wing.R': [('ry', 8)], 'tail': [('rx', 8)]}),
+        (24, {'body': [('rx', 14)], 'root': [('loc', (0, 0, 0))], 'wing.L': [('ry', 10)], 'wing.R': [('ry', -10)], 'tail': [('rx', -10)]}),
+    ])
+    make_action(arm, 'Attack', [
+        (1, {}),
+        (8, {'body': [('rx', -20)], 'root': [('loc', (0, 0.25, 0.15))], 'wing.L': [('ry', 30)], 'wing.R': [('ry', -30)]}),
+        (13, {'body': [('rx', 25)], 'root': [('loc', (0, -0.35, -0.1))]}),
+        (22, {}),
+    ])
+    make_action(arm, 'Hit', [(1, {}), (4, {'body': [('rx', -18), ('ry', 12)], 'root': [('loc', (0, 0.12, 0.08))]}), (12, {})])
+    make_action(arm, 'PowerDown', [
+        (1, {}),
+        (8, {'body': [('ry', 25), ('rx', 10)], 'root': [('loc', (0, 0, 0.15))], 'wing.L': [('ry', 30)]}),
+        (22, {'body': [('ry', 70), ('rx', 30)], 'root': [('loc', (0, -0.2, -1.3))], 'wing.L': [('ry', 40)], 'wing.R': [('ry', 20)]}),
+        (30, {'body': [('ry', 80), ('rx', 35)], 'root': [('loc', (0, -0.25, -1.32))], 'wing.L': [('ry', 45)], 'wing.R': [('ry', 25)]}),
+    ])
+    return arm, mesh
+
+
+def titan(name):
+    """Boss: an oversized mech with seven answer screens and shoulder cannons."""
+    return humanoid(name, bulk=1.9, panels=('head', 'chest', 'belly', 'armL', 'armR', 'thighL', 'thighR'), cannons=True)

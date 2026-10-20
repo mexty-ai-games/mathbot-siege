@@ -75,8 +75,9 @@ export function HowTo({ ui, t, touch, onBack }: { ui: UiTexts; t: T; touch: bool
   );
 }
 
-export function ModeSelect({ ui, t, modes, best, onPick, onBack }: {
-  ui: UiTexts; t: T; modes: ModeConfig[]; best: { [id: string]: number }; onPick: (m: ModeConfig) => void; onBack: () => void;
+export function ModeSelect({ ui, t, modes, best, bestWave, onPick, onBack }: {
+  ui: UiTexts; t: T; modes: ModeConfig[]; best: { [id: string]: number }; bestWave: { [id: string]: number };
+  onPick: (m: ModeConfig) => void; onBack: () => void;
 }) {
   const first = useFocusFirst();
   return (
@@ -88,7 +89,7 @@ export function ModeSelect({ ui, t, modes, best, onPick, onBack }: {
             <span className="sym" aria-hidden="true">{(m.ops || []).map((o) => OP_SYMBOL[o]).join(' ')}</span>
             <span className="nm">{t(m.name)}</span>
             <span className="ds">{t(m.description)}</span>
-            {best[m.id] ? <span className="bs">★ {t(ui.best)}: {best[m.id]}</span> : null}
+            {best[m.id] ? <span className="bs">★ {t(ui.best)}: {best[m.id]} · {t(ui.bestWave)}: {bestWave[m.id] || 0}</span> : null}
           </button>
         ))}
       </div>
@@ -97,8 +98,8 @@ export function ModeSelect({ ui, t, modes, best, onPick, onBack }: {
   );
 }
 
-export function Pause({ ui, t, muted, onResume, onMute, onQuit }: {
-  ui: UiTexts; t: T; muted: boolean; onResume: () => void; onMute: () => void; onQuit: () => void;
+export function Pause({ ui, t, muted, onResume, onMute, onEndRun, onQuit }: {
+  ui: UiTexts; t: T; muted: boolean; onResume: () => void; onMute: () => void; onEndRun: () => void; onQuit: () => void;
 }) {
   const first = useFocusFirst();
   return (
@@ -106,12 +107,13 @@ export function Pause({ ui, t, muted, onResume, onMute, onQuit }: {
       <h2 className="msb-h">{t(ui.paused)}</h2>
       <button ref={first} className="msb-btn" onClick={onResume}>{t(ui.resume)}</button>
       <button className="msb-btn ghost" onClick={onMute}>{muted ? '🔇 ' + t(ui.unmute) : '🔊 ' + t(ui.mute)}</button>
+      <button className="msb-btn ghost" onClick={onEndRun}>{t(ui.endRun)}</button>
       <button className="msb-btn ghost" onClick={onQuit}>{t(ui.quit)}</button>
     </div>
   );
 }
 
-export interface ResultData { victory: boolean; score: number; wave: number; correct: number; answered: number; newBest: boolean }
+export interface ResultData { score: number; wave: number; correct: number; answered: number; newBest: boolean }
 
 export function Results({ ui, t, r, guest, onAgain, onMenu }: {
   ui: UiTexts; t: T; r: ResultData; guest: boolean; onAgain: () => void; onMenu: () => void;
@@ -121,8 +123,8 @@ export function Results({ ui, t, r, guest, onAgain, onMenu }: {
   return (
     <div className="msb-menu dim">
       <div className="msb-card" role="dialog" aria-labelledby="msb-res">
-        <h2 className="msb-h" id="msb-res" style={{ color: r.victory ? '#7dffb2' : '#ffd84a' }}>{t(r.victory ? ui.victoryTitle : ui.defeatTitle)}</h2>
-        <p className="msb-p">{t(r.victory ? ui.victoryText : ui.defeatText)}</p>
+        <h2 className="msb-h" id="msb-res" style={{ color: '#ffd84a' }}>{t(ui.defeatTitle)}</h2>
+        <p className="msb-p">{t(ui.defeatText)}</p>
         <div className="msb-stats">
           <div className="msb-stat"><small>{t(ui.score)}</small><b>{r.score}</b></div>
           <div className="msb-stat"><small>{t(ui.waveReached)}</small><b>{r.wave}</b></div>

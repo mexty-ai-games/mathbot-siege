@@ -1,97 +1,799 @@
 {
-  "ui": {
-    "title": { "en": "MathBot Siege", "fr": "MathBot Siege" },
-    "subtitle": { "en": "SOLVE TO SURVIVE", "fr": "CALCULE POUR SURVIVRE" },
-    "play": { "en": "Play", "fr": "Jouer" },
-    "howToPlay": { "en": "How to play", "fr": "Comment jouer" },
-    "howToSteps": [
-      { "en": "Robots march in with a math problem floating above their head.", "fr": "Les robots avancent avec un calcul affiché au-dessus de leur tête." },
-      { "en": "Every robot shows numbers on its screens. Only ONE screen has the right answer.", "fr": "Chaque robot affiche des nombres sur ses écrans. UN SEUL écran a la bonne réponse." },
-      { "en": "Aim at the right answer and shoot to power the robot down.", "fr": "Vise la bonne réponse et tire pour éteindre le robot." },
-      { "en": "A wrong answer or a robot that reaches you costs one shield cell. Clear every wave to win!", "fr": "Une mauvaise réponse ou un robot qui t'atteint te coûte une cellule de bouclier. Termine toutes les vagues pour gagner !" }
-    ],
-    "controlsDesktop": { "en": "Mouse to aim, click to shoot, WASD or ZQSD to move, R to reload, Esc to pause.", "fr": "Souris pour viser, clic pour tirer, ZQSD ou WASD pour bouger, R pour recharger, Échap pour la pause." },
-    "controlsTouch": { "en": "Left stick to move, drag on the right to look. Tap a screen to shoot it, or use the FIRE button.", "fr": "Joystick à gauche pour bouger, glisse à droite pour regarder. Touche un écran pour tirer dessus, ou utilise le bouton TIR." },
-    "controlsKeyboard": { "en": "Keyboard only: Tab jumps your aim to the next answer screen, Space shoots, arrows turn.", "fr": "Au clavier : Tab place ta visée sur l'écran suivant, Espace tire, les flèches tournent." },
-    "chooseMode": { "en": "Choose your training", "fr": "Choisis ton entraînement" },
-    "back": { "en": "Back", "fr": "Retour" },
-    "loading": { "en": "Booting the hangar…", "fr": "Démarrage du hangar…" },
-    "loadError": { "en": "The hangar could not load. Check your connection and try again.", "fr": "Le hangar n'a pas pu charger. Vérifie ta connexion et réessaie." },
-    "retry": { "en": "Try again", "fr": "Réessayer" },
-    "clickToAim": { "en": "Click to aim", "fr": "Clique pour viser" },
-    "tapToStart": { "en": "Tap to start", "fr": "Touche pour commencer" },
-    "wave": { "en": "Wave", "fr": "Vague" },
-    "waveIncoming": { "en": "ROBOTS INCOMING", "fr": "ROBOTS EN APPROCHE" },
-    "waveCleared": { "en": "Wave cleared!", "fr": "Vague terminée !" },
-    "robotsLeft": { "en": "robots left", "fr": "robots restants" },
-    "score": { "en": "Score", "fr": "Score" },
-    "best": { "en": "Best", "fr": "Record" },
-    "shield": { "en": "Shield", "fr": "Bouclier" },
-    "combo": { "en": "Combo", "fr": "Combo" },
-    "reloading": { "en": "Reloading", "fr": "Recharge" },
-    "weaponName": { "en": "Pulse blaster", "fr": "Blaster à impulsion" },
-    "paused": { "en": "Paused", "fr": "Pause" },
-    "resume": { "en": "Resume", "fr": "Reprendre" },
-    "quit": { "en": "Quit to menu", "fr": "Retour au menu" },
-    "mute": { "en": "Sound off", "fr": "Couper le son" },
-    "unmute": { "en": "Sound on", "fr": "Activer le son" },
-    "pause": { "en": "Pause", "fr": "Pause" },
-    "fire": { "en": "FIRE", "fr": "TIR" },
-    "praise": [
-      { "en": "Great!", "fr": "Bravo !" },
-      { "en": "Correct!", "fr": "Exact !" },
-      { "en": "Nice shot!", "fr": "Joli tir !" },
-      { "en": "Brilliant!", "fr": "Génial !" },
-      { "en": "Math power!", "fr": "Super calcul !" }
-    ],
-    "wrongAnswer": { "en": "{picked} is not the answer to {problem}. Try another screen!", "fr": "{picked} n'est pas le résultat de {problem}. Essaie un autre écran !" },
-    "hint": { "en": "Look for the green blinking screen.", "fr": "Cherche l'écran vert qui clignote." },
-    "aimForAnswer": { "en": "Aim for the screen with the right answer!", "fr": "Vise l'écran avec la bonne réponse !" },
-    "zapped": { "en": "Zapped! Keep your distance.", "fr": "Zappé ! Garde tes distances." },
-    "victoryTitle": { "en": "Hangar secured!", "fr": "Hangar sécurisé !" },
-    "victoryText": { "en": "Every robot is powered down. Your math saved the day!", "fr": "Tous les robots sont éteints. Tes calculs ont sauvé la journée !" },
-    "defeatTitle": { "en": "Shields down!", "fr": "Bouclier épuisé !" },
-    "defeatText": { "en": "Good effort! Recharge and try again: every try makes your math faster.", "fr": "Bel effort ! Recharge et réessaie : chaque partie rend tes calculs plus rapides." },
-    "accuracy": { "en": "Accuracy", "fr": "Précision" },
-    "solved": { "en": "Problems solved", "fr": "Calculs réussis" },
-    "waveReached": { "en": "Wave reached", "fr": "Vague atteinte" },
-    "newBest": { "en": "New best score!", "fr": "Nouveau record !" },
-    "playAgain": { "en": "Play again", "fr": "Rejouer" },
-    "menu": { "en": "Menu", "fr": "Menu" },
-    "guestNote": { "en": "You're not signed in: your best scores are saved on this device only.", "fr": "Tu n'es pas connecté : tes records sont gardés sur cet appareil seulement." }
+ "ui": {
+  "title": {
+   "en": "MathBot Siege",
+   "fr": "MathBot Siege"
   },
-  "modes": [
-    { "id": "add", "name": { "en": "Addition", "fr": "Addition" }, "description": { "en": "Add numbers to beat the bots.", "fr": "Additionne pour battre les robots." }, "ops": ["add"], "color": "#3ad7ff" },
-    { "id": "sub", "name": { "en": "Subtraction", "fr": "Soustraction" }, "description": { "en": "Take away to power them down.", "fr": "Soustrais pour les éteindre." }, "ops": ["sub"], "color": "#7dff8a" },
-    { "id": "mul", "name": { "en": "Multiplication", "fr": "Multiplication" }, "description": { "en": "Times tables up to 12.", "fr": "Tables de multiplication jusqu'à 12." }, "ops": ["mul"], "color": "#ff5a3c" },
-    { "id": "div", "name": { "en": "Division", "fr": "Division" }, "description": { "en": "Share and split, no remainders.", "fr": "Partage exact, sans reste." }, "ops": ["div"], "color": "#ffb020" },
-    { "id": "mixed", "name": { "en": "Mixed", "fr": "Mélange" }, "description": { "en": "All four operations at once.", "fr": "Les quatre opérations à la fois." }, "ops": ["add", "sub", "mul", "div"], "color": "#c07dff" }
+  "subtitle": {
+   "en": "SOLVE TO SURVIVE",
+   "fr": "CALCULE POUR SURVIVRE"
+  },
+  "play": {
+   "en": "Play",
+   "fr": "Jouer"
+  },
+  "howToPlay": {
+   "en": "How to play",
+   "fr": "Comment jouer"
+  },
+  "howToSteps": [
+   {
+    "en": "Robots march out of the portals with a math problem floating above their head.",
+    "fr": "Les robots sortent des portails avec un calcul affiché au-dessus de leur tête."
+   },
+   {
+    "en": "Every robot shows numbers on its screens. Only ONE screen has the right answer: shoot it to power the robot down.",
+    "fr": "Chaque robot affiche des nombres sur ses écrans. UN SEUL a la bonne réponse : tire dessus pour éteindre le robot."
+   },
+   {
+    "en": "Powered-down robots drop energy cores ◆. Spend them between waves on new weapons and upgrades.",
+    "fr": "Les robots éteints lâchent des cristaux d'énergie ◆. Dépense-les entre les vagues pour de nouvelles armes et améliorations."
+   },
+   {
+    "en": "A wrong answer or a robot that reaches you costs one shield cell. How many waves can you survive?",
+    "fr": "Une mauvaise réponse ou un robot qui t'atteint te coûte une cellule de bouclier. Combien de vagues tiendras-tu ?"
+   }
   ],
-  "waves": [
-    { "drones": 3, "mechs": 0, "spiders": 0, "speed": 0.8, "maxActive": 2 },
-    { "drones": 4, "mechs": 0, "spiders": 0, "speed": 0.85, "maxActive": 2 },
-    { "drones": 4, "mechs": 1, "spiders": 0, "speed": 0.9, "maxActive": 3 },
-    { "drones": 4, "mechs": 1, "spiders": 1, "speed": 0.95, "maxActive": 3 },
-    { "drones": 4, "mechs": 2, "spiders": 1, "speed": 1.0, "maxActive": 3 },
-    { "drones": 5, "mechs": 2, "spiders": 2, "speed": 1.05, "maxActive": 4 },
-    { "drones": 5, "mechs": 2, "spiders": 3, "speed": 1.1, "maxActive": 4 },
-    { "drones": 6, "mechs": 3, "spiders": 3, "speed": 1.15, "maxActive": 4 }
+  "controlsDesktop": {
+   "en": "Mouse to aim, click to shoot, right-click to zoom with the sniper, WASD or ZQSD to move, 1-4 or the wheel to switch weapon, R to reload, Esc to pause.",
+   "fr": "Souris pour viser, clic pour tirer, clic droit pour zoomer au sniper, ZQSD ou WASD pour bouger, 1-4 ou la molette pour changer d'arme, R pour recharger, Échap pour la pause."
+  },
+  "controlsTouch": {
+   "en": "Left stick to move, drag on the right to look. Tap a screen to shoot it, or hold FIRE. Tap a weapon to switch, ⌖ to zoom.",
+   "fr": "Joystick à gauche pour bouger, glisse à droite pour regarder. Touche un écran pour tirer dessus, ou maintiens TIR. Touche une arme pour changer, ⌖ pour zoomer."
+  },
+  "controlsKeyboard": {
+   "en": "Keyboard only: Tab jumps your aim to the next answer screen, Space shoots, F zooms, arrows turn.",
+   "fr": "Au clavier : Tab place ta visée sur l'écran suivant, Espace tire, F zoome, les flèches tournent."
+  },
+  "chooseMode": {
+   "en": "Choose your training",
+   "fr": "Choisis ton entraînement"
+  },
+  "back": {
+   "en": "Back",
+   "fr": "Retour"
+  },
+  "loading": {
+   "en": "Booting the hangar…",
+   "fr": "Démarrage du hangar…"
+  },
+  "loadError": {
+   "en": "The hangar could not load. Check your connection and try again.",
+   "fr": "Le hangar n'a pas pu charger. Vérifie ta connexion et réessaie."
+  },
+  "retry": {
+   "en": "Try again",
+   "fr": "Réessayer"
+  },
+  "clickToAim": {
+   "en": "Click to aim",
+   "fr": "Clique pour viser"
+  },
+  "tapToStart": {
+   "en": "Tap to start",
+   "fr": "Touche pour commencer"
+  },
+  "wave": {
+   "en": "Wave",
+   "fr": "Vague"
+  },
+  "waveIncoming": {
+   "en": "ROBOTS INCOMING",
+   "fr": "ROBOTS EN APPROCHE"
+  },
+  "waveCleared": {
+   "en": "Wave cleared!",
+   "fr": "Vague terminée !"
+  },
+  "robotsLeft": {
+   "en": "robots left",
+   "fr": "robots restants"
+  },
+  "score": {
+   "en": "Score",
+   "fr": "Score"
+  },
+  "best": {
+   "en": "Best",
+   "fr": "Record"
+  },
+  "shield": {
+   "en": "Shield",
+   "fr": "Bouclier"
+  },
+  "combo": {
+   "en": "Combo",
+   "fr": "Combo"
+  },
+  "reloading": {
+   "en": "Reloading",
+   "fr": "Recharge"
+  },
+  "weaponName": {
+   "en": "Pulse blaster",
+   "fr": "Blaster à impulsion"
+  },
+  "paused": {
+   "en": "Paused",
+   "fr": "Pause"
+  },
+  "resume": {
+   "en": "Resume",
+   "fr": "Reprendre"
+  },
+  "quit": {
+   "en": "Quit to menu",
+   "fr": "Retour au menu"
+  },
+  "mute": {
+   "en": "Sound off",
+   "fr": "Couper le son"
+  },
+  "unmute": {
+   "en": "Sound on",
+   "fr": "Activer le son"
+  },
+  "pause": {
+   "en": "Pause",
+   "fr": "Pause"
+  },
+  "fire": {
+   "en": "FIRE",
+   "fr": "TIR"
+  },
+  "praise": [
+   {
+    "en": "Great!",
+    "fr": "Bravo !"
+   },
+   {
+    "en": "Correct!",
+    "fr": "Exact !"
+   },
+   {
+    "en": "Nice shot!",
+    "fr": "Joli tir !"
+   },
+   {
+    "en": "Brilliant!",
+    "fr": "Génial !"
+   },
+   {
+    "en": "Math power!",
+    "fr": "Super calcul !"
+   }
   ],
-  "settings": {
-    "shield": 8,
-    "robotZapDamage": 1,
-    "wrongAnswerDamage": 1,
-    "waveHeal": 2,
-    "magazine": 12,
-    "hintAfterMistakes": 2,
-    "numbers": { "addMaxStart": 10, "addMaxStep": 5, "addMaxCap": 100, "mulMaxStart": 5, "mulMaxCap": 12 }
+  "wrongAnswer": {
+   "en": "{picked} is not the answer to {problem}. Try another screen!",
+   "fr": "{picked} n'est pas le résultat de {problem}. Essaie un autre écran !"
   },
-  "models": {
-    "drone": "/models/robot_drone.glb",
-    "mech": "/models/robot_mech.glb",
-    "spider": "/models/robot_spider.glb",
-    "blaster": "/models/blaster.glb",
-    "arena": "/models/arena.glb"
+  "hint": {
+   "en": "Look for the green blinking screen.",
+   "fr": "Cherche l'écran vert qui clignote."
   },
-  "decorFormulas": ["7 × 8 = 56", "a² + b² = c²", "144 ÷ 12 = 12", "3 + 9 = 12", "π ≈ 3.14", "9 × 9 = 81", "100 − 37 = 63", "2⁵ = 32"]
+  "aimForAnswer": {
+   "en": "Aim for the screen with the right answer!",
+   "fr": "Vise l'écran avec la bonne réponse !"
+  },
+  "zapped": {
+   "en": "Zapped! Keep your distance.",
+   "fr": "Zappé ! Garde tes distances."
+  },
+  "defeatTitle": {
+   "en": "Shields down!",
+   "fr": "Bouclier épuisé !"
+  },
+  "defeatText": {
+   "en": "Great run! Every wave makes your math faster. Can you beat your best wave?",
+   "fr": "Belle partie ! Chaque vague rend tes calculs plus rapides. Bats-tu ta meilleure vague ?"
+  },
+  "accuracy": {
+   "en": "Accuracy",
+   "fr": "Précision"
+  },
+  "solved": {
+   "en": "Problems solved",
+   "fr": "Calculs réussis"
+  },
+  "waveReached": {
+   "en": "Wave reached",
+   "fr": "Vague atteinte"
+  },
+  "newBest": {
+   "en": "New best score!",
+   "fr": "Nouveau record !"
+  },
+  "playAgain": {
+   "en": "Play again",
+   "fr": "Rejouer"
+  },
+  "menu": {
+   "en": "Menu",
+   "fr": "Menu"
+  },
+  "guestNote": {
+   "en": "You're not signed in: your best scores are saved on this device only.",
+   "fr": "Tu n'es pas connecté : tes records sont gardés sur cet appareil seulement."
+  },
+  "bossIncoming": {
+   "en": "TITAN INCOMING",
+   "fr": "UN TITAN ARRIVE"
+  },
+  "bestWave": {
+   "en": "Wave",
+   "fr": "Vague"
+  },
+  "cores": {
+   "en": "Cores",
+   "fr": "Cristaux"
+  },
+  "zoom": {
+   "en": "Zoom",
+   "fr": "Zoom"
+  },
+  "switchWeapon": {
+   "en": "Weapons",
+   "fr": "Armes"
+  },
+  "endRun": {
+   "en": "End run",
+   "fr": "Terminer la partie"
+  },
+  "longShot": {
+   "en": "Long shot!",
+   "fr": "Tir de loin !"
+  },
+  "lootShield": {
+   "en": "Shield cell recovered!",
+   "fr": "Cellule de bouclier récupérée !"
+  },
+  "briefing": {
+   "en": "Mission briefing",
+   "fr": "Briefing de mission"
+  },
+  "lesson": {
+   "en": "Quick lesson",
+   "fr": "Petite leçon"
+  },
+  "skipLesson": {
+   "en": "Got it!",
+   "fr": "Compris !"
+  },
+  "hideLessons": {
+   "en": "Don't show lessons",
+   "fr": "Ne plus afficher les leçons"
+  },
+  "shop": {
+   "en": "Armory",
+   "fr": "Armurerie"
+  },
+  "shopHint": {
+   "en": "Spend the cores you collected. Upgrades last until the end of this run.",
+   "fr": "Dépense les cristaux récoltés. Les améliorations durent jusqu'à la fin de la partie."
+  },
+  "unlock": {
+   "en": "Unlock",
+   "fr": "Débloquer"
+  },
+  "equip": {
+   "en": "Equip",
+   "fr": "Équiper"
+  },
+  "equipped": {
+   "en": "Equipped",
+   "fr": "Équipée"
+  },
+  "maxed": {
+   "en": "Maxed",
+   "fr": "Au max"
+  },
+  "level": {
+   "en": "Level",
+   "fr": "Niveau"
+  },
+  "startRun": {
+   "en": "Start wave 1",
+   "fr": "Lancer la vague 1"
+  },
+  "nextWave": {
+   "en": "Wave",
+   "fr": "Vague"
+  }
+ },
+ "modes": [
+  {
+   "id": "add",
+   "name": {
+    "en": "Addition",
+    "fr": "Addition"
+   },
+   "description": {
+    "en": "Add numbers to beat the bots.",
+    "fr": "Additionne pour battre les robots."
+   },
+   "ops": [
+    "add"
+   ],
+   "color": "#3ad7ff"
+  },
+  {
+   "id": "sub",
+   "name": {
+    "en": "Subtraction",
+    "fr": "Soustraction"
+   },
+   "description": {
+    "en": "Take away to power them down.",
+    "fr": "Soustrais pour les éteindre."
+   },
+   "ops": [
+    "sub"
+   ],
+   "color": "#7dff8a"
+  },
+  {
+   "id": "mul",
+   "name": {
+    "en": "Multiplication",
+    "fr": "Multiplication"
+   },
+   "description": {
+    "en": "Times tables up to 12.",
+    "fr": "Tables de multiplication jusqu'à 12."
+   },
+   "ops": [
+    "mul"
+   ],
+   "color": "#ff5a3c"
+  },
+  {
+   "id": "div",
+   "name": {
+    "en": "Division",
+    "fr": "Division"
+   },
+   "description": {
+    "en": "Share and split, no remainders.",
+    "fr": "Partage exact, sans reste."
+   },
+   "ops": [
+    "div"
+   ],
+   "color": "#ffb020"
+  },
+  {
+   "id": "mixed",
+   "name": {
+    "en": "Mixed",
+    "fr": "Mélange"
+   },
+   "description": {
+    "en": "All four operations at once.",
+    "fr": "Les quatre opérations à la fois."
+   },
+   "ops": [
+    "add",
+    "sub",
+    "mul",
+    "div"
+   ],
+   "color": "#c07dff"
+  }
+ ],
+ "settings": {
+  "shield": 8,
+  "robotZapDamage": 1,
+  "wrongAnswerDamage": 1,
+  "hintAfterMistakes": 2,
+  "numbers": {
+   "addMaxStart": 10,
+   "addMaxStep": 5,
+   "addMaxCap": 100,
+   "mulMaxStart": 5,
+   "mulMaxCap": 12
+  }
+ },
+ "models": {
+  "drone": "/models/robot_drone.glb",
+  "mech": "/models/robot_mech.glb",
+  "spider": "/models/robot_spider.glb",
+  "scout": "/models/robot_scout.glb",
+  "titan": "/models/robot_titan.glb",
+  "weapons": "/models/weapons.glb",
+  "arena": "/models/arena2.glb"
+ },
+ "decorFormulas": [
+  "7 × 8 = 56",
+  "a² + b² = c²",
+  "144 ÷ 12 = 12",
+  "3 + 9 = 12",
+  "π ≈ 3.14",
+  "9 × 9 = 81",
+  "100 − 37 = 63",
+  "2⁵ = 32"
+ ],
+ "endless": {
+  "startRobots": 3,
+  "robotsPerWave": 1.5,
+  "maxRobots": 26,
+  "mechFrom": 3,
+  "spiderFrom": 4,
+  "scoutFrom": 2,
+  "bossEvery": 5,
+  "speedStart": 0.8,
+  "speedPerWave": 0.05,
+  "speedCap": 1.6,
+  "maxActiveStart": 2,
+  "maxActiveCap": 7
+ },
+ "weapons": [
+  {
+   "id": "pistol",
+   "name": {
+    "en": "Pulse pistol",
+    "fr": "Pistolet à impulsion"
+   },
+   "description": {
+    "en": "Reliable and precise. Your starter.",
+    "fr": "Fiable et précis. Ton arme de départ."
+   },
+   "cost": 0,
+   "fireRate": 0.22,
+   "magazine": 12,
+   "reload": 1.1,
+   "auto": false,
+   "aimAssistPx": 16,
+   "pellets": 1,
+   "zoomFov": 0,
+   "color": "#3a8bff"
+  },
+  {
+   "id": "rifle",
+   "name": {
+    "en": "Vector rifle",
+    "fr": "Fusil vectoriel"
+   },
+   "description": {
+    "en": "Automatic: hold the trigger to keep firing.",
+    "fr": "Automatique : garde la gâchette pour tirer en rafale."
+   },
+   "cost": 25,
+   "fireRate": 0.11,
+   "magazine": 30,
+   "reload": 1.6,
+   "auto": true,
+   "aimAssistPx": 12,
+   "pellets": 1,
+   "zoomFov": 0,
+   "color": "#ff8a1a"
+  },
+  {
+   "id": "shotgun",
+   "name": {
+    "en": "Scatter shotgun",
+    "fr": "Fusil à dispersion"
+   },
+   "description": {
+    "en": "Wide blast: the screen nearest your aim is hit, even if you are a bit off.",
+    "fr": "Tir large : l'écran le plus proche de ta visée est touché, même un peu à côté."
+   },
+   "cost": 40,
+   "fireRate": 0.75,
+   "magazine": 6,
+   "reload": 1.9,
+   "auto": false,
+   "aimAssistPx": 70,
+   "pellets": 7,
+   "zoomFov": 0,
+   "color": "#ff3a6a"
+  },
+  {
+   "id": "sniper",
+   "name": {
+    "en": "Cipher sniper",
+    "fr": "Sniper Cipher"
+   },
+   "description": {
+    "en": "Zoom in and solve from far away. Long shots score 1.5×.",
+    "fr": "Zoome et résous de très loin. Les tirs de loin valent 1,5×."
+   },
+   "cost": 55,
+   "fireRate": 0.9,
+   "magazine": 5,
+   "reload": 2.0,
+   "auto": false,
+   "aimAssistPx": 8,
+   "pellets": 1,
+   "zoomFov": 16,
+   "color": "#4dff7a"
+  }
+ ],
+ "upgrades": [
+  {
+   "id": "shield",
+   "name": {
+    "en": "Shield cell",
+    "fr": "Cellule de bouclier"
+   },
+   "description": {
+    "en": "+1 maximum shield.",
+    "fr": "+1 bouclier maximum."
+   },
+   "cost": 20,
+   "costGrowth": 1.6,
+   "maxLevel": 4,
+   "icon": "🛡️"
+  },
+  {
+   "id": "reload",
+   "name": {
+    "en": "Quick loader",
+    "fr": "Recharge rapide"
+   },
+   "description": {
+    "en": "Reload 18% faster.",
+    "fr": "Recharge 18 % plus vite."
+   },
+   "cost": 15,
+   "costGrowth": 1.6,
+   "maxLevel": 3,
+   "icon": "⚡"
+  },
+  {
+   "id": "magazine",
+   "name": {
+    "en": "Big magazines",
+    "fr": "Grands chargeurs"
+   },
+   "description": {
+    "en": "+30% shots per magazine.",
+    "fr": "+30 % de tirs par chargeur."
+   },
+   "cost": 15,
+   "costGrowth": 1.6,
+   "maxLevel": 3,
+   "icon": "🔋"
+  },
+  {
+   "id": "repair",
+   "name": {
+    "en": "Repair kit",
+    "fr": "Kit de réparation"
+   },
+   "description": {
+    "en": "Refill your shield now.",
+    "fr": "Remplit ton bouclier maintenant."
+   },
+   "cost": 12,
+   "costGrowth": 1,
+   "maxLevel": 0,
+   "icon": "🔧"
+  },
+  {
+   "id": "scanner",
+   "name": {
+    "en": "Answer scanner",
+    "fr": "Scanner de réponse"
+   },
+   "description": {
+    "en": "The right screen blinks green after just one mistake.",
+    "fr": "Le bon écran clignote en vert dès la première erreur."
+   },
+   "cost": 30,
+   "costGrowth": 1,
+   "maxLevel": 1,
+   "icon": "🔍"
+  }
+ ],
+ "lessons": [
+  {
+   "op": "add",
+   "title": {
+    "en": "Jumps on the number line",
+    "fr": "Des bonds sur la droite numérique"
+   },
+   "a": 8,
+   "b": 5,
+   "lines": [
+    {
+     "en": "Adding means moving forward. Start at the first number and jump forward by the second.",
+     "fr": "Additionner, c'est avancer. Pars du premier nombre et fais un bond égal au second."
+    },
+    {
+     "en": "8 + 5: from 8, jump 5 steps → 13.",
+     "fr": "8 + 5 : depuis 8, avance de 5 → 13."
+    }
+   ]
+  },
+  {
+   "op": "add",
+   "title": {
+    "en": "Make a ten first",
+    "fr": "Fais d'abord une dizaine"
+   },
+   "a": 7,
+   "b": 6,
+   "lines": [
+    {
+     "en": "7 needs 3 more to make 10. Take 3 from the 6: 7 + 3 = 10, then 10 + 3 = 13.",
+     "fr": "Il manque 3 à 7 pour faire 10. Prends 3 dans le 6 : 7 + 3 = 10, puis 10 + 3 = 13."
+    },
+    {
+     "en": "Tens are easy to add, so aim for them!",
+     "fr": "Les dizaines sont faciles à ajouter : vise-les !"
+    }
+   ]
+  },
+  {
+   "op": "add",
+   "title": {
+    "en": "Order doesn't matter",
+    "fr": "L'ordre ne compte pas"
+   },
+   "a": 4,
+   "b": 9,
+   "lines": [
+    {
+     "en": "4 + 9 is the same as 9 + 4. Start from the bigger number and count on: 9… 10, 11, 12, 13.",
+     "fr": "4 + 9, c'est pareil que 9 + 4. Pars du plus grand et compte : 9… 10, 11, 12, 13."
+    }
+   ]
+  },
+  {
+   "op": "sub",
+   "title": {
+    "en": "Taking away",
+    "fr": "Enlever"
+   },
+   "a": 12,
+   "b": 5,
+   "lines": [
+    {
+     "en": "Subtracting means taking some away and counting what is left.",
+     "fr": "Soustraire, c'est enlever et compter ce qui reste."
+    },
+    {
+     "en": "12 − 5: cross out 5 of the 12 dots → 7 are left.",
+     "fr": "12 − 5 : barre 5 des 12 points → il en reste 7."
+    }
+   ]
+  },
+  {
+   "op": "sub",
+   "title": {
+    "en": "Count up to find the gap",
+    "fr": "Compte la différence"
+   },
+   "a": 15,
+   "b": 9,
+   "lines": [
+    {
+     "en": "15 − 9 is the gap between 9 and 15. Count up from 9: 10, 11, 12, 13, 14, 15 → 6 steps.",
+     "fr": "15 − 9, c'est l'écart entre 9 et 15. Compte depuis 9 : 10, 11, 12, 13, 14, 15 → 6 pas."
+    }
+   ]
+  },
+  {
+   "op": "sub",
+   "title": {
+    "en": "Check with addition",
+    "fr": "Vérifie avec une addition"
+   },
+   "a": 14,
+   "b": 6,
+   "lines": [
+    {
+     "en": "If 14 − 6 = 8, then 8 + 6 must give 14 again. It does, so the answer is right!",
+     "fr": "Si 14 − 6 = 8, alors 8 + 6 doit redonner 14. C'est le cas : la réponse est juste !"
+    }
+   ]
+  },
+  {
+   "op": "mul",
+   "title": {
+    "en": "Rows of dots",
+    "fr": "Des rangées de points"
+   },
+   "a": 3,
+   "b": 4,
+   "lines": [
+    {
+     "en": "3 × 4 means 3 rows of 4. Count them: 4, 8, 12.",
+     "fr": "3 × 4, c'est 3 rangées de 4. Compte-les : 4, 8, 12."
+    },
+    {
+     "en": "Multiplying is fast repeated adding: 4 + 4 + 4 = 12.",
+     "fr": "Multiplier, c'est additionner plusieurs fois très vite : 4 + 4 + 4 = 12."
+    }
+   ]
+  },
+  {
+   "op": "mul",
+   "title": {
+    "en": "Turn it around",
+    "fr": "Retourne-le"
+   },
+   "a": 6,
+   "b": 7,
+   "lines": [
+    {
+     "en": "6 × 7 = 7 × 6: the same dots, just turned. Learn one fact and you get two!",
+     "fr": "6 × 7 = 7 × 6 : les mêmes points, juste tournés. Apprends un résultat, tu en gagnes deux !"
+    },
+    {
+     "en": "6 × 7 = 42.",
+     "fr": "6 × 7 = 42."
+    }
+   ]
+  },
+  {
+   "op": "mul",
+   "title": {
+    "en": "Double, then double again",
+    "fr": "Double, puis encore double"
+   },
+   "a": 4,
+   "b": 8,
+   "lines": [
+    {
+     "en": "To multiply by 4, double twice: 8 → 16 → 32. So 4 × 8 = 32.",
+     "fr": "Pour multiplier par 4, double deux fois : 8 → 16 → 32. Donc 4 × 8 = 32."
+    }
+   ]
+  },
+  {
+   "op": "div",
+   "title": {
+    "en": "Sharing equally",
+    "fr": "Partager en parts égales"
+   },
+   "a": 12,
+   "b": 3,
+   "lines": [
+    {
+     "en": "12 ÷ 3 means sharing 12 into 3 equal groups.",
+     "fr": "12 ÷ 3, c'est partager 12 en 3 groupes égaux."
+    },
+    {
+     "en": "Each group gets 4, so 12 ÷ 3 = 4.",
+     "fr": "Chaque groupe reçoit 4, donc 12 ÷ 3 = 4."
+    }
+   ]
+  },
+  {
+   "op": "div",
+   "title": {
+    "en": "Use your times tables",
+    "fr": "Utilise tes tables"
+   },
+   "a": 35,
+   "b": 5,
+   "lines": [
+    {
+     "en": "35 ÷ 5 asks: 5 times what makes 35? 5 × 7 = 35, so the answer is 7.",
+     "fr": "35 ÷ 5 demande : 5 fois combien font 35 ? 5 × 7 = 35, donc la réponse est 7."
+    }
+   ]
+  },
+  {
+   "op": "div",
+   "title": {
+    "en": "Check by multiplying",
+    "fr": "Vérifie en multipliant"
+   },
+   "a": 24,
+   "b": 4,
+   "lines": [
+    {
+     "en": "If 24 ÷ 4 = 6, then 6 × 4 must give 24. It does!",
+     "fr": "Si 24 ÷ 4 = 6, alors 6 × 4 doit donner 24. C'est bien le cas !"
+    }
+   ]
+  }
+ ],
+ "loot": {
+  "coresPerRobot": 1,
+  "shieldChance": 0.15
+ }
 }

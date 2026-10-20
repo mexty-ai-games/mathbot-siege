@@ -48,7 +48,7 @@ def build(name, fn, **kw):
     export_glb(os.path.join(OUT, name + '.glb'))
     if PREVIEW:
         preview(name, arm, [('Idle', [1]), ('Walk', [1, 9, 17]), ('Attack', [13]), ('Hit', [4]), ('PowerDown', [20, 40])],
-                cam_dist=5.5 if name == 'robot_spider' else 4.4, cam_z=0.7 if name == 'robot_spider' else 1.1)
+                cam_dist={'robot_spider': 5.5, 'robot_titan': 6.5}.get(name, 4.4), cam_z={'robot_spider': 0.7, 'robot_scout': 1.5, 'robot_titan': 1.5}.get(name, 1.1))
     print('[%s] size=%d bytes' % (name, os.path.getsize(os.path.join(OUT, name + '.glb'))))
 
 
@@ -56,3 +56,5 @@ build('robot_drone', robots.humanoid)
 build('robot_mech', robots.humanoid, bulk=1.4,
       panels=('head', 'chest', 'belly', 'armL', 'armR', 'thighL', 'thighR'), cannons=True)
 build('robot_spider', robots.spider)
+build('robot_scout', robots.scout)
+build('robot_titan', robots.titan)
